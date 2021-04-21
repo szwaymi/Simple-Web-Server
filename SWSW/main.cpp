@@ -94,10 +94,13 @@ struct sClient *rServiceAdd(void)
 	WaitForSingleObject(ghSemaphore, INFINITE);
 	giID++;
 	pmClient = (struct sClient *)HeapAlloc(ghHeap, 0, sizeof(struct sClient));
-	pmClient->hSock = gmClients.hSock;
-	pmClient->pmNext = gmClients.pmNext;
-	pmClient->iID = giID;
-	gmClients.pmNext = pmClient;
+	if (pmClient)
+	{
+		pmClient->hSock = gmClients.hSock;
+		pmClient->pmNext = gmClients.pmNext;
+		pmClient->iID = giID;
+		gmClients.pmNext = pmClient;
+	}
 	ReleaseSemaphore(ghSemaphore, 1, NULL);
 	return pmClient;
 }
@@ -574,7 +577,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	closesocket(hListen);
 	CloseHandle(ghSemaphore[0]);
 	CloseHandle(ghSemaphore[1]);
-	HeapDestroy(ghHeap);
+	if (ghHeap) { HeapDestroy(ghHeap); }
 
 	return 0;
 }
