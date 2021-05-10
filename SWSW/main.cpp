@@ -533,6 +533,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		}
 	}
 
+	giID = 0;
 	ghHeap = HeapCreate(0, 0, 0);
 	ghSemaphore[0] = CreateSemaphore(NULL, 1, 1, L"Critical Section Sempaphore: Client");
 	ghSemaphore[1] = CreateSemaphore(NULL, 1, 1, L"Critical Section Sempaphore: Log");
