@@ -37,6 +37,7 @@ static NOTIFYICONDATA gmND;
 static unsigned char giStatus;
 static struct sClient gmClients;
 static unsigned char giID;
+static unsigned char giConnections;
 static HANDLE ghSemaphore[2];
 static HANDLE ghHeap;
 static HWND ghWndLog;
@@ -101,6 +102,7 @@ struct sClient *rServiceAdd(void)
 		pmClient->iID = giID;
 		gmClients.pmNext = pmClient;
 	}
+	giConnections++;
 	ReleaseSemaphore(ghSemaphore, 1, NULL);
 	return pmClient;
 }
@@ -115,6 +117,7 @@ void rServiceRemove(struct sClient *pmClient)
 	}
 	*ppmClient = pmClient->pmNext;
 	HeapFree(ghHeap, 0, pmClient);
+	giConnections--;
 	ReleaseSemaphore(ghSemaphore, 1, NULL);
 }
 DWORD WINAPI rLoopService(LPVOID pParam)
@@ -534,6 +537,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	}
 
 	giID = 0;
+	giConnections = 0;
 	ghHeap = HeapCreate(0, 0, 0);
 	ghSemaphore[0] = CreateSemaphore(NULL, 1, 1, L"Critical Section Sempaphore: Client");
 	ghSemaphore[1] = CreateSemaphore(NULL, 1, 1, L"Critical Section Sempaphore: Log");
