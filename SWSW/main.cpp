@@ -252,7 +252,7 @@ DWORD WINAPI rLoopService(LPVOID pParam)
 			}
 			rLogAdd(pmClient->iID, cPath);
 			//	Open Requested File
-			hFile = CreateFileW(cPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+			hFile = CreateFileW(cPath, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 			//		Invalid
 			if (hFile == INVALID_HANDLE_VALUE)
 			{
